@@ -18,6 +18,13 @@
 - FFmpeg
 - Docker（可选，用于容器化部署）
 
+## API Token 申请
+
+在使用本应用之前，您需要：
+1. 访问 [硅基云平台](https://cloud.siliconflow.cn/) 注册账号
+2. 在平台中申请 API Token
+3. 将获取到的 Token 配置到应用中
+
 ## 安装部署
 
 ### 方法一：直接部署
