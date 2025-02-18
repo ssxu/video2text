@@ -1,18 +1,24 @@
-FROM python:3.9-slim
+FROM python:3.10
 
+# 更换 apt 源为阿里云 Debian 镜像源
+RUN echo "deb https://mirrors.aliyun.com/debian/ bookworm main non-free non-free-firmware contrib" > /etc/apt/sources.list
+RUN echo "deb https://mirrors.aliyun.com/debian-security/ bookworm-security main" >> /etc/apt/sources.list
+RUN echo "deb https://mirors.aliyun.com/debian/ bookworm-updates main non-free non-free-firmware contrib" >> /etc/apt/sources.list
+RUN echo "deb https://mirrors.aliyun.com/debian/ bookworm-backports main non-free non-free-firmware contrib" >> /etc/apt/sources.list
+
+RUN apt-get update && apt-get install -y ffmpeg
+
+# 设置工作目录
 WORKDIR /app
 
-# 安装系统依赖
-RUN apt-get update && apt-get install -y \
-    ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
+# 将当前目录的内容复制到容器的工作目录中
+COPY . /app
 
-# 复制项目文件
-COPY requirements.txt .
-COPY . .
+RUN pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
 
-# 安装Python依赖
-RUN pip install --no-cache-dir -r requirements.txt
+# 安装任何必需的 Python 包
+RUN python -m pip install --upgrade pip wheel
+RUN pip install -r requirements.txt
 
 # 创建上传目录
 RUN mkdir -p uploads
